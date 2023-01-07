@@ -13,7 +13,7 @@ class CharityProjectCreate(BaseModel):
         if not value:
             raise ValueError('Имя обязательно к заполнению')
         return value
-    
+
     @validator('description')
     def description_cant_be_empty(cls, value: str):
         if not value:
