@@ -7,19 +7,19 @@ class CharityProjectUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = Field(None, min_length=1)
     full_amount: Optional[NonNegativeInt]
-    
+
     @validator('name')
     def name_cannot_be_null(cls, value):
         if value is None:
             raise ValueError('Имя не может быть пустым!')
         return value
-    
+
     @validator('full_amount')
     def full_amount_cannot_be_zero(cls, value):
         if value == 0:
             raise ValueError('Всего лишь НОЛЬ для котиков? Серьёзно?')
         return value
-    
+
 
 class CharityProjectCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)

@@ -49,3 +49,13 @@ async def check_sum(
             status_code=422,
             detail='Нельзя установить требуемую сумму меньше уже вложенной!'
         )
+
+
+async def check_if_invested(
+    project: CharityProject,
+) -> None:
+    if project.invested_amount > 0:
+        raise HTTPException(
+            status_code=422,
+            detail='Нельзя удалить проект, в который уже были инвестированы средства, его можно только закрыть.'
+        )

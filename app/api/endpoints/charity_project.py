@@ -6,7 +6,7 @@ from app.core.user import current_superuser
 from app.core.db import get_async_session
 from app.crud.charity_project import create_charity_project, get_all, update_charity_project, delete_project
 from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpdate
-from app.api.validators import check_name_duplicate, check_charity_project_exists, check_if_project_closed, check_sum
+from app.api.validators import check_name_duplicate, check_charity_project_exists, check_if_project_closed, check_sum, check_if_invested
 
 router = APIRouter()
 
@@ -76,5 +76,6 @@ async def delete_charity_project(
     project = await check_charity_project_exists(
         project_id, session
     )
+    await check_if_invested(project)
     project_deleted = await delete_project(project, session)
     return project_deleted
