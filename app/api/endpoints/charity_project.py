@@ -7,7 +7,7 @@ from app.core.db import get_async_session
 from app.crud.charity_project import charity_project_crud
 from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpdate
 from app.api.validators import check_name_duplicate, check_charity_project_exists, check_if_project_closed, check_sum, check_if_invested
-
+from app.donation_service.donation_processor import donation_processor
 router = APIRouter()
 
 
@@ -23,6 +23,8 @@ async def create_new_charity_project(
     """Только для суперюзеров."""
     await check_name_duplicate(charity_project.name, session)
     new_project = await charity_project_crud.create(charity_project, session)
+    await donation_processor(session)
+    await session.refresh(new_project)
     return new_project
 
 

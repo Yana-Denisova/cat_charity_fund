@@ -6,9 +6,10 @@ from app.models import User
 from app.core.user import current_superuser, current_user
 from app.core.db import get_async_session
 from app.crud.donation  import donation_crud
-from app.schemas.donation import GetUserDonations
+from app.schemas.donation import GetUserDonations, DonationBase
 
 router = APIRouter()
+
 
 @router.get(
     '/',
@@ -35,3 +36,17 @@ async def get_my_donations(
     """Только для текущего пользователя"""
     my_donations = await donation_crud.get_by_user(user, session)
     return my_donations
+
+
+@router.post(
+    '/',
+    response_model=GetUserDonations,
+    response_model_exclude_none=True
+)
+async def create_new_donation(
+    donation: DonationBase,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    new_donation = await donation_crud.create(obj_in=donation, session=session, user=user)
+    return new_donation

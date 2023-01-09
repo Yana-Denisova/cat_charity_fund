@@ -25,8 +25,21 @@ class CRUDCharityProject(CRUDBase):
         db_project_id = db_project_id.scalars().first()
         return db_project_id
 
+    async def get_project_by_investments(
+        self,
+        session: AsyncSession
+    ) -> Optional[CharityProject]:
+        available_project = await session.execute(
+            select(CharityProject).where(
+                CharityProject.full_amount > CharityProject.fully_invested
+            )
+        )
+        return available_project.scalars().first()
+
 
 charity_project_crud = CRUDCharityProject(CharityProject)
+
+
 
 
 async def create_charity_project(
