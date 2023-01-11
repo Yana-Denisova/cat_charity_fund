@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.user import current_superuser
 from app.core.db import get_async_session
 from app.crud.charity_project import charity_project_crud
-from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpdate
+from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpdate, CharityProjectDB
 from app.api.validators import check_name_duplicate, check_charity_project_exists, check_if_project_closed, check_sum, check_if_invested
 from app.donation_service.donation_processor import donation_processor
 router = APIRouter()
@@ -14,7 +14,8 @@ router = APIRouter()
 @router.post(
     '/',
     response_model_exclude_none=True,
-    #dependencies=[Depends(current_superuser)]
+    response_model=CharityProjectDB,
+    dependencies=[Depends(current_superuser)]
 )
 async def create_new_charity_project(
     charity_project: CharityProjectCreate,
@@ -31,6 +32,7 @@ async def create_new_charity_project(
 @router.get(
     '/',
     response_model_exclude_none=True,
+    response_model=list[CharityProjectDB],
 )
 async def get_all_charity_projects(
     session: AsyncSession = Depends(get_async_session),
@@ -41,7 +43,7 @@ async def get_all_charity_projects(
 
 @router.patch(
     '/{project_id}',
-    response_model_exclude_none=True,
+    response_model=CharityProjectDB,
     #dependencies=[Depends(current_superuser)]
 )
 async def partially_update_charity_project(
@@ -68,7 +70,7 @@ async def partially_update_charity_project(
 @router.delete(
     '/{project_id}',
     response_model_exclude_none=True,
-    #dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)]
 )
 async def delete_charity_project(
     project_id: int,
