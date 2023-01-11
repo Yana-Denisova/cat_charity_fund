@@ -70,7 +70,7 @@ async def partially_update_charity_project(
 @router.delete(
     '/{project_id}',
     response_model_exclude_none=True,
-    dependencies=[Depends(current_superuser)]
+    #dependencies=[Depends(current_superuser)]
 )
 async def delete_charity_project(
     project_id: int,
@@ -81,5 +81,4 @@ async def delete_charity_project(
         project_id, session
     )
     await check_if_invested(project)
-    project_deleted = await charity_project_crud.remove(project, session)
-    return project_deleted
+    return await charity_project_crud.remove(project, session)

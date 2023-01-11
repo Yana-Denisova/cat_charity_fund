@@ -40,18 +40,20 @@ class CharityProjectCreate(BaseModel):
         if not value:
             raise ValueError('Требуемая сумма обязательна к заполнению')
         return value
+    
+    class Config:
+        min_anystr_length = 1
 
-
-class CharityProjectUpdate(BaseModel):
+class CharityProjectUpdate(CharityProjectCreate):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = Field(None, min_length=1)
     full_amount: Optional[PositiveInt]
 
-    #@validator('name')
-    #def name_cannot_be_null(cls, value):
-        #if value is None:
-            #raise ValueError('Имя не может быть пустым!')
-        #return value
+    @validator('name')
+    def name_cannot_be_null(cls, value):
+        if value is None:
+            raise ValueError('Имя не может быть пустым!')
+        return value
 
     #@validator('full_amount')
     #def full_amount_cannot_be_zero(cls, value):
