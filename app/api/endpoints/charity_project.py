@@ -56,9 +56,9 @@ async def partially_update_charity_project(
         project_id, session
     )
     await check_if_project_closed(project)
-    if obj_in.full_amount is not None:
+    if obj_in.full_amount:
         await check_sum(project=project, new_full_amount=obj_in.full_amount)
-    if obj_in.name is not None:
+    if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
 
     updated_project = await charity_project_crud.update(
@@ -70,7 +70,7 @@ async def partially_update_charity_project(
 @router.delete(
     '/{project_id}',
     response_model_exclude_none=True,
-    #dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)]
 )
 async def delete_charity_project(
     project_id: int,

@@ -12,7 +12,7 @@ async def check_name_duplicate(
     project_id = await get_project_id_by_name(name, session)
     if project_id is not None:
         raise HTTPException(
-            status_code=422,
+            status_code=400,
             detail='Проект с таким именем уже существует!',
         )
 
@@ -35,7 +35,7 @@ async def check_if_project_closed(
 ) -> None:
     if project.fully_invested is True:
         raise HTTPException(
-            status_code=422,
+            status_code=400,
             detail='Закрытый проект нельзя редактировать!'
         )
 

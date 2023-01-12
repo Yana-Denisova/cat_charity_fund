@@ -6,7 +6,7 @@ from app.models import User
 from app.core.user import current_superuser, current_user
 from app.core.db import get_async_session
 from app.crud.donation  import donation_crud
-from app.schemas.donation import GetUserDonations, DonationBase
+from app.schemas.donation import GetUserDonations, DonationBase, DonationsDB
 from app.donation_service.donation_processor import donation_processor
 
 router = APIRouter()
@@ -14,6 +14,7 @@ router = APIRouter()
 
 @router.get(
     '/',
+    response_model=list[DonationsDB],
     response_model_exclude_none=True,
     #dependencies=[Depends(current_superuser)]
 )
@@ -26,7 +27,7 @@ async def get_all_donations(
 
 
 @router.get(
-    '/me',
+    '/my',
     response_model=list[GetUserDonations],
     response_model_exclude_none=True
 )
