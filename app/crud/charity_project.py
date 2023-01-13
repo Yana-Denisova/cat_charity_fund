@@ -30,8 +30,7 @@ class CRUDCharityProject(CRUDBase):
         session: AsyncSession
     ) -> Optional[CharityProject]:
         available_projects = await session.execute(
-            select(CharityProject).where(
-                CharityProject.fully_invested == False).order_by(CharityProject.create_date) # noqa
+            select(CharityProject).where(~CharityProject.fully_invested).order_by(CharityProject.create_date)
         )
         return available_projects.scalars().all()
 
