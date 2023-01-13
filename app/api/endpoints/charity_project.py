@@ -6,8 +6,9 @@ from app.core.user import current_superuser
 from app.core.db import get_async_session
 from app.crud.charity_project import charity_project_crud
 from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpdate, CharityProjectDB
-from app.api.validators import check_name_duplicate, check_charity_project_exists, check_if_project_closed, check_sum, check_if_invested
-from app.donation_service.donation_processor import donation_processor
+from app.api.validators import (check_name_duplicate, check_charity_project_exists,
+                                check_if_project_closed, check_sum, check_if_invested)
+from app.services.donation_processor import donation_processor
 router = APIRouter()
 
 
@@ -15,7 +16,7 @@ router = APIRouter()
     '/',
     response_model_exclude_none=True,
     response_model=CharityProjectDB,
-    dependencies=[Depends(current_superuser)]
+    #dependencies=[Depends(current_superuser)]
 )
 async def create_new_charity_project(
     charity_project: CharityProjectCreate,
@@ -44,7 +45,7 @@ async def get_all_charity_projects(
 @router.patch(
     '/{project_id}',
     response_model=CharityProjectDB,
-    #dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)]
 )
 async def partially_update_charity_project(
     project_id: int,
@@ -55,9 +56,9 @@ async def partially_update_charity_project(
     project = await check_charity_project_exists(
         project_id, session
     )
-    await check_if_project_closed(project)
+    check_if_project_closed(project)
     if obj_in.full_amount:
-        await check_sum(project=project, new_full_amount=obj_in.full_amount)
+        check_sum(project, obj_in)
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
 

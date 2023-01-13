@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.charity_project import get_project_id_by_name, get_by_id
 from app.models import CharityProject
+from app.schemas.charity_project import CharityProjectUpdate
 
 
 async def check_name_duplicate(
@@ -30,7 +31,7 @@ async def check_charity_project_exists(
     return project
 
 
-async def check_if_project_closed(
+def check_if_project_closed(
     project: CharityProject
 ) -> None:
     if project.fully_invested is True:
@@ -40,14 +41,16 @@ async def check_if_project_closed(
         )
 
 
-async def check_sum(
+def check_sum(
     project: CharityProject,
-    new_full_amount: int
+    obj_in: CharityProjectUpdate,
 ) -> None:
-    if project.invested_amount > new_full_amount:
+    if (
+        project.invested_amount > obj_in.full_amount
+    ):
         raise HTTPException(
-            status_code=422,
-            detail='Нельзя установить требуемую сумму меньше уже вложенной!'
+            status_code=400,
+            detail="Нельзя установить сумму, ниже уже вложенной!"
         )
 
 

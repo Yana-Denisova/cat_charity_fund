@@ -29,16 +29,14 @@ class CRUDCharityProject(CRUDBase):
         self,
         session: AsyncSession
     ) -> Optional[CharityProject]:
-        available_project = await session.execute(
+        available_projects = await session.execute(
             select(CharityProject).where(
                 CharityProject.fully_invested == False).order_by(CharityProject.create_date)
         )
-        return available_project.scalars().first()
+        return available_projects.scalars().all()
 
 
 charity_project_crud = CRUDCharityProject(CharityProject)
-
-
 
 
 async def create_charity_project(

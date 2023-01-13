@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import User
 from app.core.user import current_superuser, current_user
 from app.core.db import get_async_session
-from app.crud.donation  import donation_crud
+from app.crud.donation import donation_crud
 from app.schemas.donation import GetUserDonations, DonationBase, DonationsDB
-from app.donation_service.donation_processor import donation_processor
+from app.services.donation_processor import donation_processor
 
 router = APIRouter()
 
@@ -16,7 +16,7 @@ router = APIRouter()
     '/',
     response_model=list[DonationsDB],
     response_model_exclude_none=True,
-    #dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)]
 )
 async def get_all_donations(
     session: AsyncSession = Depends(get_async_session),

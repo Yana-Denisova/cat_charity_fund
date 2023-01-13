@@ -28,7 +28,7 @@ class CRUDDonation(CRUDBase):
         available_donation = await session.execute(
             select(Donation).where(
                 Donation.fully_invested == False).order_by(Donation.create_date)
-            )
+        )
         return available_donation.scalars().first()
 
 
