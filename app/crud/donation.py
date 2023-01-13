@@ -27,7 +27,7 @@ class CRUDDonation(CRUDBase):
     ) -> Optional[Donation]:
         available_donation = await session.execute(
             select(Donation).where(
-                Donation.fully_invested == False).order_by(Donation.create_date)
+                Donation.fully_invested == False).order_by(Donation.create_date)  # noqa
         )
         return available_donation.scalars().first()
 

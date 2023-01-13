@@ -31,7 +31,7 @@ class CRUDCharityProject(CRUDBase):
     ) -> Optional[CharityProject]:
         available_projects = await session.execute(
             select(CharityProject).where(
-                CharityProject.fully_invested == False).order_by(CharityProject.create_date)
+                CharityProject.fully_invested == False).order_by(CharityProject.create_date) # noqa
         )
         return available_projects.scalars().all()
 
