@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from typing import List
+
 from app.core.user import current_superuser
 from app.core.db import get_async_session
 from app.crud.charity_project import charity_project_crud
@@ -16,7 +18,7 @@ router = APIRouter()
     '/',
     response_model_exclude_none=True,
     response_model=CharityProjectDB,
-    #dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)]
 )
 async def create_new_charity_project(
     charity_project: CharityProjectCreate,
@@ -33,7 +35,7 @@ async def create_new_charity_project(
 @router.get(
     '/',
     response_model_exclude_none=True,
-    response_model=list[CharityProjectDB],
+    response_model=List[CharityProjectDB],
 )
 async def get_all_charity_projects(
     session: AsyncSession = Depends(get_async_session),

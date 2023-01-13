@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi.encoders import jsonable_encoder
 
@@ -66,7 +66,7 @@ async def get_project_id_by_name(
 
 async def get_all(
     session: AsyncSession,
-) -> list[CharityProject]:
+) -> List[CharityProject]:
     db_project = await session.execute(select(CharityProject))
     return db_project.scalars().all()
 
