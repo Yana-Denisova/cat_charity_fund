@@ -9,7 +9,7 @@
 
 ## Технологии
 
-- Python 3.9
+- Python 3.10.9
 - FastAPI 0.78
 - SQLAlchemy 1.4.36
 - pydantic 1.9.1
