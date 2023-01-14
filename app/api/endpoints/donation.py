@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,7 +21,8 @@ router = APIRouter()
 async def get_all_donations(
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Только для суперюзеров"""
+    """Только для суперюзеров. \n
+    Возвращает список всех пожертвований."""
     all_donations = await donation_crud.get_multi(session)
     return all_donations
 
@@ -36,7 +36,7 @@ async def get_my_donations(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user)
 ):
-    """Только для текущего пользователя"""
+    """Вернуть список пожертвований пользователя, выполняющего запрос."""
     my_donations = await donation_crud.get_by_user(user, session)
     return my_donations
 
@@ -51,6 +51,7 @@ async def create_new_donation(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
+    """Сделать пожертвование."""
     new_donation = await donation_crud.create(obj_in=donation, session=session, user=user)
     await donation_processor(session)
     await session.refresh(new_donation)

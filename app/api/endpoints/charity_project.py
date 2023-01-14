@@ -1,7 +1,5 @@
 from fastapi import APIRouter, Depends
-
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from typing import List
 
 from app.core.user import current_superuser
@@ -11,6 +9,7 @@ from app.schemas.charity_project import CharityProjectCreate, CharityProjectUpda
 from app.api.validators import (check_name_duplicate, check_charity_project_exists,
                                 check_if_project_closed, check_sum, check_if_invested)
 from app.services.donation_processor import donation_processor
+
 router = APIRouter()
 
 
@@ -24,7 +23,8 @@ async def create_new_charity_project(
     charity_project: CharityProjectCreate,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Только для суперюзеров."""
+    """Только для суперюзеров.\n
+    Создаёт благотворительный проект."""
     await check_name_duplicate(charity_project.name, session)
     new_project = await charity_project_crud.create(charity_project, session)
     await donation_processor(session)
@@ -40,6 +40,7 @@ async def create_new_charity_project(
 async def get_all_charity_projects(
     session: AsyncSession = Depends(get_async_session),
 ):
+    """Возвращает список всех проектов."""
     all_projects = await charity_project_crud.get_multi(session)
     return all_projects
 
@@ -54,7 +55,9 @@ async def partially_update_charity_project(
     obj_in: CharityProjectUpdate,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Только для суперюзеров."""
+    """Только для суперюзеров.\n
+    Закрытый проект нельзя редактировать,
+    нельзя установить требуемую сумму меньше уже вложенной."""
     project = await check_charity_project_exists(
         project_id, session
     )
@@ -79,7 +82,9 @@ async def delete_charity_project(
     project_id: int,
     session: AsyncSession = Depends(get_async_session),
 ):
-    """Только для суперюзеров."""
+    """Только для суперюзеров.\n
+    Удаляет проект. Нельзя удалить проект,
+    в который уже были инвестированы средства, его можно только закрыть."""
     project = await check_charity_project_exists(
         project_id, session
     )
