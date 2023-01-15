@@ -39,7 +39,7 @@ def check_if_project_closed(
     project: CharityProject
 ) -> None:
     """Проверяет закрыт ли запрашиваемый проект."""
-    if project.fully_invested is True:
+    if project.fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='Закрытый проект нельзя редактировать!'
