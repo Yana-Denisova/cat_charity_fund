@@ -1,3 +1,5 @@
+import logging
+
 from typing import Optional, Union
 
 from fastapi import Depends, Request
@@ -14,6 +16,10 @@ from app.core.config import settings
 from app.core.db import get_async_session
 from app.models.user import User
 from app.schemas.user import UserCreate
+
+
+logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s")
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
@@ -53,7 +59,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(
             self, user: User, request: Optional[Request] = None
     ):
-        print(f'Пользователь {user.email} зарегистрирован.')
+        logging.info(f'Пользователь {user.email} зарегистрирован.')
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):

@@ -131,3 +131,5 @@ dmypy.json
 
 # .idea
 .idea
+
+py_log.log
