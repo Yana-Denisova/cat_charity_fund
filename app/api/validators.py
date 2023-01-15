@@ -60,7 +60,7 @@ def check_sum(
         )
 
 
-async def check_if_invested(
+def check_if_invested(
     project: CharityProject,
 ) -> None:
     """Проверка на наличие инвестиций в проект."""
