@@ -60,4 +60,4 @@ http://127.0.0.1:8000/redoc
 
 ## Автор проекта:
 
-- [GitHub](https://github.com/Yana-Denisova/)
+- [Денисова Яна](https://t.me/DenisovaYana)
